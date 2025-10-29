@@ -1,15 +1,13 @@
 import RatioCard from "../components/RatioCard";
-
-export default function Page() {
+export default function Page(){
   return (
     <main className="container">
-      <h1 style={{ fontSize: 28, marginBottom: 8 }}>Moniteur de Paires Synthétiques</h1>
-      <p style={{ color: 'var(--muted)', marginBottom: 18 }}>
-        Compare deux tokens via USDT (paire pseudo-synthétique A/B). Sélectionne des tokens L2 EVM.
-      </p>
-      <div className="card">
-        <RatioCard />
+      <div className="hero">
+        <h1 className="title">Web3 Synthetic Pair Monitor</h1>
+        <p className="subtitle">Compare deux tokens (USDT) et suis leur ratio en direct. Design neon, glass & gradients.</p>
       </div>
+      <div className="card"><RatioCard/></div>
+      <div className="footer">Construit avec Next.js • Données publiques CoinGecko • Pas de trading, monitoring uniquement</div>
     </main>
   );
 }
