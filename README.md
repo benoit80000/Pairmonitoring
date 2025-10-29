@@ -1,0 +1,1 @@
+# SynPair Dual\n- `/` : Binance page\n- `/coingecko` : CoinGecko page (set COINGECKO_API_KEY)\nEdit `lib/tokens.json` to add your tokens.\n

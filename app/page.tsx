@@ -1,9 +1,1 @@
-import Image from 'next/image';
-import RatioCard from '../components/RatioCard';
-export default function Page(){
-  return (<main className="container">
-    <div className="nav"><Image src="/logo.svg" alt="Logo" width={36} height={36} className="logo"/><div className="brand-name">SynPair</div></div>
-    <div className="card"><RatioCard/></div>
-    <div className="footer">Next.js • Binance public API • Monitoring uniquement • Historisation locale 5 min + export CSV</div>
-  </main>);
-}
+import Image from 'next/image'; import RatioCard from '../components/RatioCard'; export default function Page(){return(<main className='container'><div style={{display:'flex',gap:12,alignItems:'center',marginBottom:18}}><Image src='/logo.svg' alt='Logo' width={36} height={36}/><div style={{fontWeight:900,letterSpacing:'-.02em',background:'linear-gradient(92deg,#6ae3ff,#7d5bff)',WebkitBackgroundClip:'text',color:'transparent'}}>SynPair</div><div className='small'>• Source: Binance</div></div><div className='card'><RatioCard source='binance'/></div><div className='small' style={{textAlign:'center',marginTop:16}}>Page 1/2 — Binance API publique</div></main>);}

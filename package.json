@@ -1,7 +1,7 @@
 {
-  "name": "synthetic-pair-monitor",
+  "name": "synpair-dual",
   "private": true,
-  "version": "1.4.0",
+  "version": "2.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
