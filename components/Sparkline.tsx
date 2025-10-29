@@ -1,4 +1,9 @@
 'use client';import{useEffect,useRef}from'react';
-export default function Sparkline({data}){const r=useRef(null);useEffect(()=>{const c=r.current;if(!c)return;
-const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.beginPath();data.forEach((v,i)=>x.lineTo(i*10,50-v*10));
-x.stroke();},[data]);return <canvas ref={r} width={200} height={100}/>;}
+export default function Sparkline({data,height=42}:{data:number[];height?:number}){
+  const ref=useRef<HTMLCanvasElement|null>(null);
+  useEffect(()=>{const c=ref.current!;const x=c.getContext('2d')!;const w=c.clientWidth;const h=height;
+    c.width=w*devicePixelRatio;c.height=h*devicePixelRatio;x.scale(devicePixelRatio,devicePixelRatio);
+    x.clearRect(0,0,w,h);if(data.length<2)return;const min=Math.min(...data);const max=Math.max(...data);const range=max-min||1;
+    x.beginPath();x.lineWidth=2;x.strokeStyle='#5b9cff';
+    data.forEach((v,i)=>{const X=(i/(data.length-1))*(w-2)+1;const Y=h-((v-min)/range)*(h-2)-1; if(i===0)x.moveTo(X,Y); else x.lineTo(X,Y);});
+    x.stroke();},[data,height]);return <canvas ref={ref} style={{width:'100%',height}}/>;}
