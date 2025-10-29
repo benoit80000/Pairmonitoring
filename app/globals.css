@@ -1,1 +1,25 @@
-body{color:#e9eef7;background:#04070d} /* simplified for brevity */
+:root{--bg:#04070d;--card:rgba(18,24,38,.7);--stroke:rgba(120,130,255,.18);--text:#e9eef7;--muted:#9fb0c9;--accent:#6ae3ff;--accent2:#7d5bff;--ok:#4ade80;--warn:#fbbf24;--err:#fb7185}
+*{box-sizing:border-box}html,body{padding:0;margin:0;background:#04070d;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+.container{max-width:1040px;margin:56px auto;padding:0 20px}
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.brand-name{font-weight:900;letter-spacing:-.02em;background:linear-gradient(92deg,#22e1ff,#7d5bff);-webkit-background-clip:text;color:transparent}
+.logo{width:36px;height:36px}
+.card{background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:20px;box-shadow:0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(10px)}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.badge{background:rgba(255,255,255,.06);border:1px solid var(--stroke);color:var(--muted);border-radius:999px;padding:6px 10px;font-size:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.input,.select{width:100%;background:rgba(4,8,16,.7);color:var(--text);border:1px solid var(--stroke);border-radius:12px;padding:12px 14px;outline:none}
+.input:focus,.select:focus{border-color:var(--accent)}
+.button{background:linear-gradient(92deg,var(--accent),var(--accent2));color:#041226;border:0;border-radius:12px;padding:10px 16px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(125,91,255,.25)}
+.ratio{font-size:44px;font-weight:900}
+.small{font-size:12px;color:var(--muted)}
+hr{border:none;border-top:1px solid var(--stroke);margin:14px 0}
+.alert{padding:12px 14px;border-radius:12px;background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.35);color:#fecdd3}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.legend .item{background:rgba(255,255,255,.04);border:1px solid var(--stroke);border-radius:12px;padding:10px}
+.legend .item b{display:block;margin-bottom:6px}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th,.table td{border-bottom:1px solid var(--stroke);padding:8px 10px;text-align:left}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.footer{margin-top:22px;color:var(--muted);font-size:12px;text-align:center}
+.spark-wrap{position:relative}.spark-wrap .label{position:absolute;left:8px;top:6px;font-size:10px;color:var(--muted)}
