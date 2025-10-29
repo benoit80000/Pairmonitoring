@@ -1,1 +1,1 @@
-import RatioCard from '../components/RatioCard'; export default function Page(){return(<main className='container'><h1>Web3 Synthetic Pair Monitor</h1><div className='card'><RatioCard/></div></main>);}
+import Image from 'next/image'; import RatioCard from '../components/RatioCard'; export default function Page(){return(<main className='container'><div className='nav'><Image src='/logo.svg' alt='logo' width={36} height={36}/><div className='brand-name'>SynPair</div></div><div className='card'><RatioCard/></div></main>);}

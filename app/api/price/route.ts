@@ -1,34 +1,42 @@
 import { NextResponse } from 'next/server';
 export const runtime = 'edge';
-type PriceMap = Record<string, { usdt?: number }>;
-type CacheEntry = { ts: number; pa: number; pb: number; ratio: number };
+type Price = { symbol: string; price: string };
+type CacheEntry = { ts: number; price: number };
 const g: any = globalThis as any;
-g.__CACHE__ = g.__CACHE__ || { map: new Map<string, CacheEntry>(), bucket: { tokens: 10, lastRefill: Date.now() } };
-function takeToken(): boolean { const bucket = g.__CACHE__.bucket as { tokens: number; lastRefill: number };
-  const now = Date.now(); const elapsed = now - bucket.lastRefill; const refill = Math.floor(elapsed/1000*1);
-  if (refill>0){ bucket.tokens = Math.min(10, bucket.tokens + refill); bucket.lastRefill = now; }
-  if (bucket.tokens>0){ bucket.tokens--; return true; } return false;
+g.__BINANCE__ = g.__BINANCE__ || { prices: new Map<string, CacheEntry>(), symbols: new Map<string, boolean>() };
+async function binancePrice(symbol: string): Promise<number> {
+  const url = `https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(symbol)}`;
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(String(res.status));
+  const j = (await res.json()) as Price;
+  const n = Number(j.price);
+  if (!Number.isFinite(n)) throw new Error('NaN');
+  return n;
 }
-async function fetchCG(a: string, b: string): Promise<PriceMap> {
-  const key = process.env.COINGECKO_API_KEY || process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(a)},${encodeURIComponent(b)}&vs_currencies=usdt`;
-  const headers: Record<string,string> = { accept: 'application/json' }; if (key) headers['x-cg-pro-api-key'] = key;
-  const res = await fetch(url, { cache: 'no-store', headers }); if (!res.ok) throw new Error(String(res.status));
-  return res.json() as Promise<PriceMap>;
+async function symbolExists(symbol: string): Promise<boolean> {
+  const map: Map<string, boolean> = g.__BINANCE__.symbols;
+  if (map.has(symbol)) return map.get(symbol)!;
+  const url = `https://api.binance.com/api/v3/exchangeInfo?symbol=${encodeURIComponent(symbol)}`;
+  const res = await fetch(url, { cache: 'force-cache' });
+  const ok = res.ok;
+  map.set(symbol, ok);
+  return ok;
 }
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const a = (searchParams.get('a') || '').trim();
-  const b = (searchParams.get('b') || '').trim();
-  if (!a || !b) return NextResponse.json({ error: 'Missing params a or b' }, { status: 400 });
-  const cache: Map<string, CacheEntry> = g.__CACHE__.map; const key = `${a}:${b}`; const now = Date.now(); const TTL = 30000;
-  const hit = cache.get(key); if (hit && now - hit.ts < TTL) { return NextResponse.json({ a,b,pa:hit.pa,pb:hit.pb,ratio:hit.ratio,ts:hit.ts,cached:true }); }
-  if (!takeToken()) { if (hit) return NextResponse.json({ a,b,pa:hit.pa,pb:hit.pb,ratio:hit.ratio,ts:hit.ts,cached:true }); return NextResponse.json({ error:'Rate limited locally' }, { status: 429 }); }
-  let lastErr: any = null;
-  for (let i=0;i<3;i++){ try{ const data = await fetchCG(a,b); const pa = Number(data?.[a]?.usdt); const pb = Number(data?.[b]?.usdt);
-    if (!Number.isFinite(pa) || !Number.isFinite(pb) || pa<=0 || pb<=0) throw new Error('No USDT price');
-    const ratio = pa/pb; const entry = { ts: now, pa, pb, ratio }; cache.set(key, entry);
-    return NextResponse.json({ a,b,pa,pb,ratio,ts: now, cached:false }); } catch(e:any){ lastErr=e; if (String(e.message)==='429'){ await new Promise(r=>setTimeout(r, 400*(i+1) + Math.random()*300)); continue; } break; } }
-  if (hit) return NextResponse.json({ a,b,pa:hit.pa,pb:hit.pb,ratio:hit.ratio,ts:hit.ts,cached:true });
-  return NextResponse.json({ error: 'CoinGecko error ' + (lastErr?.message || 'unknown') }, { status: 502 });
+  const a = (searchParams.get('a') || '').trim().toUpperCase();
+  const b = (searchParams.get('b') || '').trim().toUpperCase();
+  const norm = (s: string) => s.endsWith('USDT') ? s : (s + 'USDT');
+  const sa = norm(a); const sb = norm(b);
+  if (!a || !b) return NextResponse.json({ error: 'Missing params a or b (token symbols)' }, { status: 400 });
+  const [ea, eb] = await Promise.all([symbolExists(sa), symbolExists(sb)]);
+  if (!ea || !eb) { return NextResponse.json({ error: 'Symbol not found on Binance', missing: { [sa]: !ea, [sb]: !eb } }, { status: 404 }); }
+  const cache: Map<string, CacheEntry> = g.__BINANCE__.prices; const now = Date.now(); const TTL = 10000;
+  const hitA = cache.get(sa); const hitB = cache.get(sb);
+  const needA = !hitA || (now - hitA.ts > TTL); const needB = !hitB || (now - hitB.ts > TTL);
+  try {
+    const [pa, pb] = await Promise.all([ needA ? binancePrice(sa) : Promise.resolve(hitA!.price), needB ? binancePrice(sb) : Promise.resolve(hitB!.price) ]);
+    cache.set(sa, { ts: now, price: pa }); cache.set(sb, { ts: now, price: pb });
+    const ratio = pa / pb; return NextResponse.json({ a: sa, b: sb, pa, pb, ratio, ts: now, source: 'binance' });
+  } catch (e: any) { return NextResponse.json({ error: 'Binance error ' + (e?.message || 'unknown') }, { status: 502 }); }
 }

@@ -3,12 +3,47 @@
     {
       "name": "Chainlink",
       "symbol": "LINK",
-      "coingecko_id": "chainlink"
+      "binance_symbol": "LINKUSDT"
     },
     {
       "name": "Pyth Network",
       "symbol": "PYTH",
-      "coingecko_id": "pyth-network"
+      "binance_symbol": "PYTHUSDT"
+    },
+    {
+      "name": "LayerZero",
+      "symbol": "ZRO",
+      "binance_symbol": "ZROUSDT"
+    },
+    {
+      "name": "Astar",
+      "symbol": "ASTR",
+      "binance_symbol": "ASTRUSDT"
+    },
+    {
+      "name": "Aave",
+      "symbol": "AAVE",
+      "binance_symbol": "AAVEUSDT"
+    },
+    {
+      "name": "Uniswap",
+      "symbol": "UNI",
+      "binance_symbol": "UNIUSDT"
+    },
+    {
+      "name": "Arbitrum",
+      "symbol": "ARB",
+      "binance_symbol": "ARBUSDT"
+    },
+    {
+      "name": "Optimism",
+      "symbol": "OP",
+      "binance_symbol": "OPUSDT"
+    },
+    {
+      "name": "zkSync",
+      "symbol": "ZK",
+      "binance_symbol": "ZKUSDT"
     }
   ]
 }
