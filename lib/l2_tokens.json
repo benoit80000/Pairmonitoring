@@ -1,0 +1,16 @@
+{
+  "tokens_evm_l2": [
+    { "name": "Chainlink", "symbol": "LINK", "coingecko_id": "chainlink" },
+    { "name": "Pyth Network", "symbol": "PYTH", "coingecko_id": "pyth-network" },
+    { "name": "LayerZero", "symbol": "ZRO", "coingecko_id": "layerzero" },
+    { "name": "Astar", "symbol": "ASTR", "coingecko_id": "astar" },
+    { "name": "Avant", "symbol": "AVNT", "coingecko_id": "avant" },
+    { "name": "Flux", "symbol": "FLUX", "coingecko_id": "flux" },
+    { "name": "Aave", "symbol": "AAVE", "coingecko_id": "aave" },
+    { "name": "Uniswap", "symbol": "UNI", "coingecko_id": "uniswap" },
+    { "name": "Balancer", "symbol": "BAL", "coingecko_id": "balancer" },
+    { "name": "Curve DAO", "symbol": "CRV", "coingecko_id": "curve-dao-token" },
+    { "name": "GMX", "symbol": "GMX", "coingecko_id": "gmx" },
+    { "name": "Velodrome", "symbol": "VELO", "coingecko_id": "velodrome-finance" }
+  ]
+}
